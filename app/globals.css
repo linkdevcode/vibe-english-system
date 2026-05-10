@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  EngFlow design tokens — light / dark (.dark trên <html>)
+  Chuẩn HSL không kèm unit cho alpha: hsl(var(--x) / 0.5)
+*/
+
+:root {
+  /* Base canvas */
+  --background: 210 40% 98%;
+  --foreground: 222 47% 11%;
+
+  /* Surfaces — glass-ready, subtle lifts */
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --surface: 210 40% 97%;
+  --surface-foreground: 222 40% 16%;
+  --surface-elevated: 0 0% 100%;
+
+  --muted: 214 32% 91%;
+  --muted-foreground: 215 16% 47%;
+
+  --border: 214 24% 88%;
+  --input: 214 24% 88%;
+  --ring: 221 83% 53%;
+
+  /* Brand — confident blue-violet SaaS accent */
+  --primary: 239 84% 57%;
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 214 32% 93%;
+  --secondary-foreground: 222 47% 16%;
+
+  --accent: 187 92% 42%;
+  --accent-foreground: 196 100% 8%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --success: 152 69% 40%;
+  --success-foreground: 144 100% 97%;
+}
+
+.dark {
+  --background: 222 47% 6%;
+  --foreground: 210 40% 98%;
+
+  --card: 222 40% 10%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222 40% 10%;
+  --popover-foreground: 210 40% 98%;
+  --surface: 222 38% 9%;
+  --surface-foreground: 214 32% 91%;
+  --surface-elevated: 222 36% 12%;
+
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+
+  --border: 217 33% 18%;
+  --input: 217 33% 18%;
+  --ring: 224 76% 60%;
+
+  --primary: 239 76% 64%;
+  --primary-foreground: 222 47% 6%;
+
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 98%;
+
+  --accent: 187 85% 48%;
+  --accent-foreground: 196 100% 6%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 210 40% 98%;
+
+  --success: 152 61% 45%;
+  --success-foreground: 144 61% 8%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply min-h-screen bg-background text-foreground antialiased transition-colors duration-layout ease-soft;
+  }
+}
