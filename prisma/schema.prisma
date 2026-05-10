@@ -15,3 +15,46 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+/// Nhóm nội dung cấp cao (vd: Công sở, Giao tiếp)
+model Category {
+  id     String   @id @default(cuid())
+  name   String
+  slug   String   @unique
+  skills Skill[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Kỹ năng trong một Category (vd: Viết Email, Đàm phán)
+model Skill {
+  id       String @id @default(cuid())
+  name     String
+  /// Khóa icon (vd: tên Lucide trong app)
+  icon     String
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  lessons    Lesson[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+}
+
+model Lesson {
+  id          String @id @default(cuid())
+  sentenceEn  String @db.Text
+  sentenceVi  String @db.Text
+  explanation String @db.Text
+
+  skillId String
+  skill   Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([skillId])
+}

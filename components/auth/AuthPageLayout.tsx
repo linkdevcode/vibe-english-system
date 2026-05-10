@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { ArrowLeft } from "lucide-react";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
@@ -26,7 +27,7 @@ export function AuthPageLayout({ children, className }: AuthPageLayoutProps) {
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-lg flex-col px-4 pb-12 pt-6 sm:px-6">
-        <header className="shrink-0">
+        <header className="flex shrink-0 items-center justify-between gap-3">
           <Button
             href="/"
             variant="ghost"
@@ -36,6 +37,7 @@ export function AuthPageLayout({ children, className }: AuthPageLayoutProps) {
             <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
             Trang chủ
           </Button>
+          <ThemeToggle />
         </header>
 
         <div className="flex flex-1 flex-col justify-center py-10">{children}</div>

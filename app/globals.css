@@ -3,81 +3,82 @@
 @tailwind utilities;
 
 /*
-  EngFlow design tokens — light / dark (.dark trên <html>)
-  Chuẩn HSL không kèm unit cho alpha: hsl(var(--x) / 0.5)
+  EngFlow — light / dark (class trên <html> do next-themes)
+  Palette: slate–indigo SaaS dễ đọc lâu, contrast tốt.
 */
 
 :root {
-  /* Base canvas */
-  --background: 210 40% 98%;
-  --foreground: 222 47% 11%;
+  /* Canvas — sáng, trung tính ấm */
+  --background: 220 16% 97%;
+  --foreground: 222 26% 12%;
 
-  /* Surfaces — glass-ready, subtle lifts */
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
+  --card-foreground: 222 26% 12%;
   --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
-  --surface: 210 40% 97%;
-  --surface-foreground: 222 40% 16%;
-  --surface-elevated: 0 0% 100%;
+  --popover-foreground: 222 26% 12%;
+  --surface: 218 22% 95%;
+  --surface-foreground: 222 22% 16%;
+  --surface-elevated: 210 28% 99%;
 
-  --muted: 214 32% 91%;
-  --muted-foreground: 215 16% 47%;
+  --muted: 218 17% 90%;
+  --muted-foreground: 220 13% 40%;
 
-  --border: 214 24% 88%;
-  --input: 214 24% 88%;
-  --ring: 221 83% 53%;
+  --border: 215 22% 86%;
+  --input: 215 22% 88%;
+  --ring: 235 74% 50%;
 
-  /* Brand — confident blue-violet SaaS accent */
-  --primary: 239 84% 57%;
+  /* Brand — indigo chuyên nghiệp */
+  --primary: 235 70% 50%;
   --primary-foreground: 210 40% 98%;
 
-  --secondary: 214 32% 93%;
-  --secondary-foreground: 222 47% 16%;
+  --secondary: 218 20% 92%;
+  --secondary-foreground: 222 24% 16%;
 
-  --accent: 187 92% 42%;
-  --accent-foreground: 196 100% 8%;
+  /* Teal phụ — CTA nhẹ / highlight học */
+  --accent: 174 72% 36%;
+  --accent-foreground: 168 100% 98%;
 
-  --destructive: 0 84% 60%;
+  --destructive: 0 78% 50%;
   --destructive-foreground: 210 40% 98%;
 
-  --success: 152 69% 40%;
-  --success-foreground: 144 100% 97%;
+  --success: 154 61% 35%;
+  --success-foreground: 146 78% 97%;
 }
 
 .dark {
-  --background: 222 47% 6%;
-  --foreground: 210 40% 98%;
+  /* Tối sâu, không đen tuyệt đối */
+  --background: 222 22% 7%;
+  --foreground: 210 28% 96%;
 
-  --card: 222 40% 10%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222 40% 10%;
-  --popover-foreground: 210 40% 98%;
-  --surface: 222 38% 9%;
-  --surface-foreground: 214 32% 91%;
-  --surface-elevated: 222 36% 12%;
+  --card: 222 22% 10%;
+  --card-foreground: 210 26% 97%;
+  --popover: 222 22% 10%;
+  --popover-foreground: 210 26% 97%;
+  --surface: 218 22% 9%;
+  --surface-foreground: 217 22% 90%;
+  --surface-elevated: 222 20% 12%;
 
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
+  --muted: 220 17% 16%;
+  --muted-foreground: 218 13% 64%;
 
-  --border: 217 33% 18%;
-  --input: 217 33% 18%;
-  --ring: 224 76% 60%;
+  --border: 220 17% 18%;
+  --input: 220 17% 19%;
+  --ring: 232 74% 64%;
 
-  --primary: 239 76% 64%;
-  --primary-foreground: 222 47% 6%;
+  --primary: 232 74% 64%;
+  --primary-foreground: 222 22% 7%;
 
-  --secondary: 217 33% 17%;
-  --secondary-foreground: 210 40% 98%;
+  --secondary: 220 16% 18%;
+  --secondary-foreground: 210 28% 96%;
 
-  --accent: 187 85% 48%;
-  --accent-foreground: 196 100% 6%;
+  --accent: 172 68% 44%;
+  --accent-foreground: 190 100% 6%;
 
-  --destructive: 0 72% 51%;
+  --destructive: 0 72% 48%;
   --destructive-foreground: 210 40% 98%;
 
-  --success: 152 61% 45%;
-  --success-foreground: 144 61% 8%;
+  --success: 156 55% 42%;
+  --success-foreground: 150 80% 8%;
 }
 
 @layer base {
@@ -85,7 +86,27 @@
     @apply border-border;
   }
 
+  html {
+    @apply scroll-smooth;
+  }
+
   body {
-    @apply min-h-screen bg-background text-foreground antialiased transition-colors duration-layout ease-soft;
+    @apply min-h-screen bg-background text-foreground antialiased;
+    @apply text-[15px] leading-relaxed tracking-[0.01em] transition-colors duration-layout ease-soft;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold tracking-tight text-foreground;
+  }
+
+  ::selection {
+    @apply bg-primary/20 text-foreground;
+  }
+
+  .dark ::selection {
+    @apply bg-primary/30 text-foreground;
   }
 }
