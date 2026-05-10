@@ -10,7 +10,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
       defaultTheme="light"
       enableSystem={false}
       disableTransitionOnChange={false}
-      storageKey="engflow-theme"
+      storageKey="VibeEnglish-theme"
       {...props}
     >
       {children}

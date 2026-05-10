@@ -5,6 +5,7 @@ import { lessons as travelLessons } from "./travel/lessons";
 export const communicationCategory: CategorySeed = {
   slug: "communication",
   name: "Giao tiếp",
+  sortOrder: 0,
   skills: [
     {
       name: "Chào hỏi",

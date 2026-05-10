@@ -3,8 +3,10 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  /// Neon/Vercel Postgres: dùng host **không** `-pooler` (direct). Migrate cần để tránh P1002 advisory lock timeout.
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 model User {
@@ -14,6 +16,8 @@ model User {
   passwordHash String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  exerciseCompletions ExerciseCompletion[]
 }
 
 /// Nhóm nội dung cấp cao (vd: Công sở, Giao tiếp)
@@ -21,6 +25,10 @@ model Category {
   id     String   @id @default(cuid())
   name   String
   slug   String   @unique
+  /// Thứ tự hiển thị (nhỏ trước).
+  sortOrder    Int     @default(0)
+  /// Danh mục chưa có nội dung — hiển thị “sắp ra mắt”.
+  isComingSoon Boolean @default(false)
   skills Skill[]
 
   createdAt DateTime @default(now())
@@ -53,8 +61,53 @@ model Lesson {
   skillId String
   skill   Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
 
+  exercises Exercise[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([skillId])
+}
+
+enum ExerciseType {
+  MCQ
+  CLOZE
+  LISTEN_MCQ
+}
+
+/// Bài tập gắn lesson — payload là JSON khác nhau theo `type` (định nghĩa TS tại lib/exercises).
+model Exercise {
+  id        String       @id @default(cuid())
+  sortOrder Int
+  type      ExerciseType
+  payload   Json
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  completions ExerciseCompletion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([lessonId])
+}
+
+/// Đăng nhập: ghi nhận đã làm exercise (ưu tiên lưu trạng thái trả lời đúng).
+model ExerciseCompletion {
+  id              String @id @default(cuid())
+  userId          String
+  exerciseId      String
+  /// true khi ít nhất một lần trả lời đúng.
+  solvedCorrectly Boolean @default(false)
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, exerciseId])
+  @@index([userId])
+  @@index([exerciseId])
 }

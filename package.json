@@ -1,17 +1,21 @@
 {
-  "name": "engflow",
+  "name": "VibeEnglish",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "prisma generate && next dev",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "dotenv -c -- prisma generate",
     "db:push": "dotenv -c -- prisma db push",
     "db:migrate": "dotenv -c -- prisma migrate dev",
+    "db:migrate:deploy": "dotenv -c -- prisma migrate deploy",
+    "db:migrate:deploy:no-lock": "dotenv -c -- env PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK=true prisma migrate deploy",
+    "db:migrate:resolve:add-exercise": "dotenv -c -- prisma migrate resolve --applied 20260510180000_add_exercise",
+    "db:migrate-and-seed": "dotenv -c -- prisma migrate deploy && dotenv -c -- prisma db seed",
     "db:seed": "dotenv -c -- prisma db seed",
-    "postinstall": "dotenv -c -- prisma generate"
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "dotenv -c -- tsx prisma/seed.ts"

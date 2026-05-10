@@ -10,19 +10,6 @@ export default async function LearningPage() {
 
   return (
     <main className="mx-auto max-w-3xl space-y-8 px-6 py-16">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Học</h1>
-          <p className="text-muted-foreground">
-            Danh mục và kỹ năng được lấy từ cơ sở dữ liệu (
-            <span className="font-mono text-foreground text-sm">PostgreSQL · Prisma</span>
-            ).
-          </p>
-        </div>
-        <Button href="/" variant="ghost" size="sm">
-          Về trang chủ
-        </Button>
-      </div>
 
       {categories.length === 0 ? (
         <p className="rounded-3xl border border-border bg-muted/40 px-4 py-6 text-center text-muted-foreground">
@@ -33,17 +20,33 @@ export default async function LearningPage() {
         <div className="flex flex-col gap-10">
           {categories.map((cat) => (
             <section key={cat.id} className="space-y-4">
-              <div className="flex items-baseline justify-between gap-4">
-                <h2 className="text-xl font-semibold">{cat.name}</h2>
-                <Link
-                  href={`/learning/${cat.slug}`}
-                  className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-                >
-                  Xem tất cả bài học <ArrowRight className="h-4 w-4" aria-hidden />
-                </Link>
+              <div className="flex flex-wrap items-baseline justify-between gap-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-xl font-semibold">{cat.name}</h2>
+                  {cat.isComingSoon ? (
+                    <span className="rounded-full border border-dashed border-primary/50 bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                      Sắp ra mắt
+                    </span>
+                  ) : null}
+                </div>
+                {cat.isComingSoon ? (
+                  <span className="text-sm text-muted-foreground">Đang được chuẩn bị</span>
+                ) : (
+                  <Link
+                    href={`/learning/${cat.slug}`}
+                    className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                  >
+                    Xem tất cả bài học <ArrowRight className="h-4 w-4" aria-hidden />
+                  </Link>
+                )}
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
-                {cat.skills.map((skill) => (
+                {cat.skills.length === 0 ? (
+                  <p className="col-span-full text-sm text-muted-foreground">
+                    Nội dung sẽ được cập nhật trong thời gian tới.
+                  </p>
+                ) : (
+                  cat.skills.map((skill) => (
                   <Card
                     key={skill.id}
                     className="p-5 transition-shadow duration-layout hover:shadow-lg"
@@ -58,7 +61,8 @@ export default async function LearningPage() {
                       </CardDescription>
                     </CardHeader>
                   </Card>
-                ))}
+                  ))
+                )}
               </div>
             </section>
           ))}

@@ -1,18 +1,35 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { SkillLessonsPager } from "@/components/learning/SkillLessonsPager";
 import { SkillLucide } from "@/components/learning/SkillLucide";
+import type { LessonListItem } from "@/components/learning/LessonListCard";
 import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
+import { getLessonExerciseProgressMap } from "@/lib/learning-progress";
 import { getCategoryBySlug } from "@/lib/learning";
+import { getSession } from "@/lib/session";
 
 type PageProps = { params: { slug: string } };
 
 export default async function LearningCategoryPage({ params }: PageProps) {
-  const category = await getCategoryBySlug(params.slug);
+  const [category, session] = await Promise.all([
+    getCategoryBySlug(params.slug),
+    getSession(),
+  ]);
 
   if (!category) {
     notFound();
   }
+
+  const lessonIds = category.skills.flatMap((s) => s.lessons.map((l) => l.id));
+  const totalsByLessonId = Object.fromEntries(
+    category.skills.flatMap((s) =>
+      s.lessons.map((l) => [l.id, l._count.exercises] as const),
+    ),
+  );
+  const lessonProgress =
+    session && lessonIds.length
+      ? await getLessonExerciseProgressMap(session.sub, lessonIds, totalsByLessonId)
+      : undefined;
 
   return (
     <main className="mx-auto max-w-3xl space-y-10 px-6 py-16">
@@ -27,12 +44,31 @@ export default async function LearningCategoryPage({ params }: PageProps) {
             </span>
             <span className="font-mono text-xs text-foreground">{category.slug}</span>
           </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight">{category.name}</h1>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="mt-2 text-3xl font-bold tracking-tight">{category.name}</h1>
+            {category.isComingSoon ? (
+              <span className="mt-2 rounded-full border border-dashed border-primary/60 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                Sắp ra mắt
+              </span>
+            ) : null}
+          </div>
         </div>
         <Button href="/learning" variant="ghost" size="sm">
           Danh mục
         </Button>
       </div>
+
+      {category.isComingSoon ? (
+        <section className="rounded-3xl border border-dashed border-border bg-muted/20 px-5 py-8 text-center text-muted-foreground dark:bg-muted/10">
+          <p className="text-base leading-relaxed">
+            Danh mục này đang được chuẩn bị. Bạn có thể học từ các mục{" "}
+            <Link href="/learning" className="font-medium text-primary hover:underline">
+              đã mở
+            </Link>{" "}
+            trong phần Học.
+          </p>
+        </section>
+      ) : null}
 
       <div className="flex flex-col gap-12">
         {category.skills.map((skill) => (
@@ -42,25 +78,28 @@ export default async function LearningCategoryPage({ params }: PageProps) {
               <h2 className="text-xl font-semibold">{skill.name}</h2>
             </div>
             {skill.lessons.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Chưa có bài học cho kỹ năng này.</p>
+              <p className="text-sm text-muted-foreground">
+                Chưa có bài học cho kỹ năng này — nội dung sẽ được bổ sung.
+              </p>
             ) : (
-              <div className="flex flex-col gap-4">
-                {skill.lessons.map((lesson) => (
-                  <Card key={lesson.id} className="overflow-hidden p-0">
-                    <CardHeader className="border-b border-border/80 bg-muted/30 px-5 py-4 dark:bg-muted/10">
-                      <CardTitle className="text-base font-medium leading-snug text-foreground">
-                        {lesson.sentenceEn}
-                      </CardTitle>
-                      <CardDescription className="pt-2 text-base text-muted-foreground">
-                        {lesson.sentenceVi}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="px-5 py-4 text-sm leading-relaxed text-muted-foreground">
-                      {lesson.explanation}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              <SkillLessonsPager
+                categorySlug={category.slug}
+                lessons={skill.lessons.map((lesson): LessonListItem => {
+                  const prog = lessonProgress?.[lesson.id];
+                  let progressLabel: string | undefined;
+                  if (session && prog && prog.totalExercises > 0) {
+                    progressLabel = `Đã làm và lưu ${prog.completedExercises}/${prog.totalExercises} phần luyện (tài khoản của bạn)`;
+                  }
+                  return {
+                    id: lesson.id,
+                    sentenceEn: lesson.sentenceEn,
+                    sentenceVi: lesson.sentenceVi,
+                    explanation: lesson.explanation,
+                    exerciseCount: lesson._count.exercises,
+                    progressLabel,
+                  };
+                })}
+              />
             )}
           </section>
         ))}

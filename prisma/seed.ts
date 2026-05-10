@@ -12,6 +12,8 @@ async function main() {
       data: {
         name: bundle.name,
         slug: bundle.slug,
+        sortOrder: bundle.sortOrder ?? 0,
+        isComingSoon: bundle.isComingSoon ?? false,
         skills: {
           create: bundle.skills.map((skill) => ({
             name: skill.name,
@@ -21,6 +23,17 @@ async function main() {
                 sentenceEn: l.sentenceEn,
                 sentenceVi: l.sentenceVi,
                 explanation: l.explanation,
+                ...(l.exercises?.length
+                  ? {
+                      exercises: {
+                        create: l.exercises.map((ex, i) => ({
+                          sortOrder: ex.sortOrder ?? i,
+                          type: ex.type,
+                          payload: JSON.parse(JSON.stringify(ex.payload)),
+                        })),
+                      },
+                    }
+                  : {}),
               })),
             },
           })),

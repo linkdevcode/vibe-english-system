@@ -43,7 +43,7 @@ export function LoginForm({ registeredBanner }: LoginFormProps) {
           </div>
           <h1 className="text-2xl font-bold tracking-tight">Đăng nhập</h1>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Tiếp tục lộ trình tiếng Anh công sở trên EngFlow.
+            Tiếp tục lộ trình tiếng Anh công sở trên VibeEnglish.
           </p>
         </div>
 

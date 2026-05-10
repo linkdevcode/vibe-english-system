@@ -17,7 +17,7 @@ export function AppHeader() {
           href="/"
           className="text-sm font-semibold tracking-tight text-foreground transition-colors hover:text-primary"
         >
-          EngFlow
+          VibeEnglish
         </Link>
 
         <div className="flex shrink-0 items-center gap-1 sm:gap-2">

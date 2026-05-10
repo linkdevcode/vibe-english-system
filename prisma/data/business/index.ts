@@ -5,6 +5,7 @@ import { lessons as presentationLessons } from "./presentation/lessons";
 export const businessCategory: CategorySeed = {
   slug: "business",
   name: "Công sở",
+  sortOrder: 1,
   skills: [
     {
       name: "Viết Email",

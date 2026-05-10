@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EngFlow — Tiếng Anh công sở",
+  title: "VibeEnglish — Tiếng Anh công sở",
   description: "Micro-SaaS học tiếng Anh giao tiếp & môi trường công sở.",
 };
 
